@@ -3,10 +3,11 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import postRouter from "./apps/posts.js";
 import { client } from "./utils/db.js";
+import authRouter from "./apps/auth.js"; //เพิ่ม import
 
 async function init() {
   const app = express();
-  const port = 4000;
+  const port = 4003;
 
   await client.connect();
 
@@ -21,6 +22,10 @@ async function init() {
   app.get("*", (req, res) => {
     res.status(404).send("Not found");
   });
+
+  //เรียก app authRouter
+app.use("/auth", authRouter);
+
 
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
