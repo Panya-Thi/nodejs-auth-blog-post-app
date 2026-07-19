@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import axios from "axios"
+import {useNavigate} from "react-router-dom"
+import jwtDecode from "jwt-decode"
 
 const AuthContext = React.createContext();
 
@@ -14,6 +17,36 @@ function AuthProvider(props) {
     //  ให้เขียน Logic ของ Function `login` ตรงนี้
     //  Function `login` ทำหน้าที่สร้าง Request ไปที่ API POST /login
     //  ที่สร้างไว้ด้านบนพร้อมกับ Body ที่กำหนดไว้ในตารางที่ออกแบบไว้
+
+// make a login request
+const login = async (data) =>{
+  const result = await axios.post("http://localhost:4003/auth/login", data)
+  const token = result.data.token
+  localStorage.setItem("token", token)
+  const userDataFromToken = jwtDecode(token)
+  setState({...state, user: userDataFromToken})
+  navigate("/")
+
+}
+
+//regiter the user
+const register = async (data) => { ···
+}
+
+//clear the token in localStorage and the user data
+const logout = () => {···
+}
+
+const isAuthenticated = Boolean(localStorage.getItem("token"))
+
+return (
+  <AuthContext.Provider
+    value={{state, login, logout, register, isAuthenticated}}
+    > 
+    {props.children}
+    </AuthContext.Provider>
+)
+
   };
 
   const register = () => {
@@ -21,6 +54,11 @@ function AuthProvider(props) {
     //  ให้เขียน Logic ของ Function `register` ตรงนี้
     //  Function register ทำหน้าที่สร้าง Request ไปที่ API POST /register
     //  ที่สร้างไว้ด้านบนพร้อมกับ Body ที่กำหนดไว้ในตารางที่ออกแบบไว้
+
+const register = async (data) => {
+  await axios.post("http://localhost:4003/auth/register",data)
+  navigate("/login")
+}
   };
 
   const logout = () => {
